@@ -17,7 +17,7 @@ class Atom(object):
     def id_generator(self):
         return ''.join(random.sample(string.ascii_letters, 8))
 
-    def recieve_message(self, server_id, message):
+    def receive_message(self, server_id, message):
         self.message.append([message, server_id])
 
 
@@ -40,10 +40,10 @@ class Server(object):
     def send_message(self, message, atoms=None):
         if atoms is None:
             for atom in self.atoms:
-                atom.recieve_message(self.ids[self.atoms.index(atom)], message)
+                atom.receive_message(self.ids[self.atoms.index(atom)], message)
         else:
             for atom in atoms:
-                atom.recieve_message(self.ids[self.atoms.index(atom)], message)
+                atom.receive_message(self.ids[self.atoms.index(atom)], message)
 
 
 def main():
