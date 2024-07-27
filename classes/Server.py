@@ -2,6 +2,8 @@ import string
 import numpy as np
 import random
 
+import rsa
+
 from utils.data_imports import *
 from classes.Atom import Atom
 from classes.Host import Host
@@ -10,10 +12,11 @@ from classes.Host import Host
 class Server(object):
     def __init__(self, pos: np.ndarray):
         self.__position = pos
+        self.__ids = []
         self.time = 0
         self.atoms: list[Atom] = []
         self.hosts = []
-        self.__ids = []
+        self.public_key, self.__private_key = rsa.newkeys(1024)
 
         for atom in ATOMS:
             if atom.check(self.__position):
@@ -49,3 +52,6 @@ class Server(object):
             return self.__ids
         else:
             return self.__ids[self.hosts.index(hosts)]
+
+    def get_public_key(self):
+        return self.public_key

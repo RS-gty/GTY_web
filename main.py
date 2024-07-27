@@ -1,7 +1,13 @@
+import rsa
+
 from utils.imports import *
+from utils.class_imports import *
 
 
 def main():
+    message = 'RSgty'.encode('utf-8')
+    print(rsa.encrypt(message, rsa.newkeys(1024)[0]))
+
     H1 = Host(np.array([0, 0, 0]))
     H2 = Host(np.array([0, 0, 1]))
 
@@ -21,6 +27,9 @@ def main():
     print("服务器1 id：" + str(S1.get_id()))
     print("服务器2 id：" + str(S2.get_id()))
     print(H1.servers)
+
+    Sig1 = Signal(np.array([0, 0, 0]), "RSgty", 100, np.array([1, 0, 0]), np.pi/4)
+    print(Sig1.is_accessible(np.array([5.2129, 5.2123, 0])))
 
 
 if __name__ == '__main__':
