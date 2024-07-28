@@ -1,8 +1,6 @@
-import string
-import numpy as np
-import random
-
 from utils.data_imports import *
+
+from classes.Signal import *
 
 
 class Host(object):
@@ -13,6 +11,7 @@ class Host(object):
         self.atoms = []
         self.servers = []
         self.server_id = []
+        self.public_key, self.__private_key = rsa.newkeys(1024)
         self.time = 0
 
     def id_generator(self):

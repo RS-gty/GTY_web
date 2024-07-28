@@ -1,12 +1,8 @@
-import string
-import numpy as np
-import random
-
-import rsa
-
 from utils.data_imports import *
+
 from classes.Atom import Atom
 from classes.Host import Host
+from classes.Signal import *
 
 
 class Server(object):
@@ -29,10 +25,12 @@ class Server(object):
     def send_message(self, message, hosts=None, target=None, time: np.float16 = 0):
         if hosts is None:
             for host in self.hosts:
-                host.receive_message(self.__ids[self.hosts.index(host)], message, target, time)
+                temp_message = rsa.encrypt(message.encode('utf-8'), host.public_key)
+                host.receive_message(self.__ids[self.hosts.index(host)], temp_message, target, time)
         else:
             for host in hosts:
-                host.receive_message(self.__ids[self.hosts.index(host)], message, target, time)
+                temp_message = rsa.encrypt(message.encode('utf-8'), host.public_key)
+                host.receive_message(self.__ids[self.hosts.index(host)], temp_message, target, time)
 
     def send_command(self, command: str, target: Host = None, time: np.float16 = 0):
         pass
@@ -55,3 +53,6 @@ class Server(object):
 
     def get_public_key(self):
         return self.public_key
+
+    def get_private_key(self):
+        return self.__private_key

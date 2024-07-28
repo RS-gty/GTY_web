@@ -2,9 +2,9 @@ from utils.imports import *
 
 
 class Signal(object):
-    def __init__(self, center: np.ndarray, content: str, strength, direction=None, concentrate=np.pi):
+    def __init__(self, center: np.ndarray, content: str or bytes, strength, direction=None, concentrate=np.pi):
         self.__center = center
-        self.content = content
+        self.content: str or bytes = content
         self.__strength = strength
         self.__dir = direction
         self.__concentrate = 0
@@ -15,6 +15,14 @@ class Signal(object):
                 self.__concentrate = concentrate
             else:
                 raise ValueError("'value:concentrate' must be set after the direction is defined")
+
+    def encrypt(self, pub_key):
+        self.content = rsa.encrypt(self.content.encode("utf-8"), pub_key)
+        return self
+
+    def decrypt(self, pri_key):
+        self.content = rsa.decrypt(self.content, pri_key).decode("utf-8")
+        return self
 
     def density(self, distance):
         return self.__strength / (2 * np.pi * (1 - np.cos(self.__concentrate)) * distance ** 2)
