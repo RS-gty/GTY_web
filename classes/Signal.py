@@ -4,7 +4,6 @@ from utils.imports import *
 class Signal(object):
     def __init__(self, center: np.ndarray, content: str or bytes, strength, frequency,
                  direction=None, concentrate=np.pi):
-
         self.__center = center
         self.content: str or bytes = content
         self.__strength = strength
@@ -28,6 +27,9 @@ class Signal(object):
         self.content = rsa.decrypt(self.content, pri_key).decode("utf-8")
         return self
 
+    def get_distance(self, target: np.ndarray):
+        return np.linalg.norm(self.__center - target)
+
     def density(self, distance):
         return self.__strength / (2 * np.pi * (1 - np.cos(self.__concentrate)) * distance ** 2)
 
@@ -39,6 +41,8 @@ class Signal(object):
             else:
                 return False
         else:
+            print(np.dot(target_vector, self.__dir), target_vector)
+
             if (self.density(np.linalg.norm(target_vector)) > 1 and
                     np.arccos(np.dot(target_vector, self.__dir) /
                               (np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate):

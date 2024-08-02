@@ -9,6 +9,7 @@ class Atom(object):
         self.__center = host.get_position()
         self.__radius = radius
         self.__signals = []
+        self.__matrix = np.zeros((int(2 * np.ceil(radius) + 1), int(2 * np.ceil(radius) + 1)))
 
         ATOMS.append(self)
 
@@ -20,3 +21,16 @@ class Atom(object):
 
     def receive_signal(self, signal: Signal):
         self.__signals.append(signal)
+
+    def update(self):
+        for i in range(int(2 * np.ceil(self.__radius)) + 1):
+            for j in range(int(2 * np.ceil(self.__radius)) + 1):
+                for signal in self.__signals:
+                    if signal.is_accessible(np.array([i - np.ceil(self.__radius), j - np.ceil(self.__radius), 0])):
+                        try:
+                            self.__matrix[i, j] += signal.density(signal.get_distance(np.array([i - np.ceil(self.__radius), j - np.ceil(self.__radius), 0])))
+                        except ValueError:
+                            pass
+
+    def get_matrix(self):
+        return self.__matrix

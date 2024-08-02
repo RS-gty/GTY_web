@@ -12,12 +12,7 @@ A = (X.real ** 2 + X.imag ** 2) ** 0.5 * 2 / num
 
 k = np.fft.fftfreq(num, lens/num)
 
-a = 1
-tic = time.time()
-while a <= 10000:
-    a += 1
-tac = time.time()
-print(tac-tic)
+R = np.random.randn(19, 19)
 
 PHI = np.angle(X)
 plt.plot(x)
