@@ -2,12 +2,16 @@ from utils.imports import *
 
 
 class Signal(object):
-    def __init__(self, center: np.ndarray, content: str or bytes, strength, direction=None, concentrate=np.pi):
+    def __init__(self, center: np.ndarray, content: str or bytes, strength, frequency,
+                 direction=None, concentrate=np.pi):
+
         self.__center = center
         self.content: str or bytes = content
         self.__strength = strength
+        self.__frequency = frequency
         self.__dir = direction
         self.__concentrate = 0
+
         if self.__dir is not None:
             self.__concentrate = concentrate
         else:
