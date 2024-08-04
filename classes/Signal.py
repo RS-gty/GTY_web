@@ -1,4 +1,5 @@
 from utils.imports import *
+from data.data import *
 
 
 class Signal(object):
@@ -10,6 +11,8 @@ class Signal(object):
         self.__frequency = frequency
         self.__dir = direction
         self.__concentrate = 0
+        self.__origin_frame = 0
+        self.frame = 0
 
         if self.__dir is not None:
             self.__concentrate = concentrate
@@ -18,6 +21,12 @@ class Signal(object):
                 self.__concentrate = concentrate
             else:
                 raise ValueError("'value:concentrate' must be set after the direction is defined")
+
+    def sync(self, frame: int):
+        self.frame = frame
+
+    def set_origin_frame(self, origin: int):
+        self.__origin_frame = origin
 
     def encrypt(self, pub_key):
         self.content = rsa.encrypt(self.content.encode("utf-8"), pub_key)
@@ -31,21 +40,17 @@ class Signal(object):
         return np.linalg.norm(self.__center - target)
 
     def density(self, distance):
-        return self.__strength / (2 * np.pi * (1 - np.cos(self.__concentrate)) * distance ** 2)
+        bias = 2*np.pi*((C * (((self.frame - self.__origin_frame) / FPU) / UPS)) / Lambda)
+        amp = self.__strength / (2 * np.pi * (1 - np.cos(self.__concentrate)) * distance ** 2)
+        n = np.sin(2 * np.pi * distance / Lambda + bias)
+        return n * amp
 
     def is_accessible(self, target: np.ndarray) -> bool:
         target_vector = target - self.__center
         if self.__dir is None:
-            if self.density(np.linalg.norm(target_vector)) > 1:
-                return True
-            else:
-                return False
+            return True
         else:
-            print(np.dot(target_vector, self.__dir), target_vector)
-
-            if (self.density(np.linalg.norm(target_vector)) > 1 and
-                    np.arccos(np.dot(target_vector, self.__dir) /
-                              (np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate):
+            if np.arccos(np.dot(target_vector, self.__dir)/(np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate:
                 return True
             else:
                 return False

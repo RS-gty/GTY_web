@@ -12,7 +12,7 @@ class Host(object):
         self.servers = []
         self.server_id = []
         self.public_key, self.__private_key = rsa.newkeys(1024)
-        self.time = 0
+        self.frame = 0
 
     def id_generator(self):
         s = ''.join(random.sample(string.ascii_letters, 8))
@@ -38,3 +38,9 @@ class Host(object):
             if message[2] is None or message[2] == server_id:
                 messages.append(message[0])
         return messages
+
+    def update(self):
+        pass
+
+    def sync(self, frame: int):
+        self.frame = frame

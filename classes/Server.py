@@ -13,6 +13,7 @@ class Server(object):
         self.atoms: list[Atom] = []
         self.hosts = []
         self.public_key, self.__private_key = rsa.newkeys(1024)
+        self.frame = 0
 
         for atom in ATOMS:
             if atom.check(self.__position):
@@ -56,3 +57,9 @@ class Server(object):
 
     def get_private_key(self):
         return self.__private_key
+
+    def update(self):
+        pass
+
+    def sync(self, frame: int):
+        self.frame = frame

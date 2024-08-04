@@ -14,6 +14,8 @@ k = np.fft.fftfreq(num, lens/num)
 
 R = np.random.randn(19, 19)
 
+
+print(np.modf(21.35124)[0])
 PHI = np.angle(X)
 plt.plot(x)
 plt.plot(k, A)

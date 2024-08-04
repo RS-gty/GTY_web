@@ -5,10 +5,11 @@ g = globals()
 
 # Time
 UPS = update_per_second = 1000
-FPU = frame_per_update = 160
+FPU = frame_per_update = 1
 
 # Constants
-C = np.float64('3e8')
+C = np.float64('1')
+Lambda = np.float64('0.25')
 
 # Global Variables
 ATOMS = []

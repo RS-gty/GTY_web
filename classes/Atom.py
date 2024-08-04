@@ -9,7 +9,8 @@ class Atom(object):
         self.__center = host.get_position()
         self.__radius = radius
         self.__signals = []
-        self.__matrix = np.zeros((int(2 * np.ceil(radius) + 1), int(2 * np.ceil(radius) + 1)))
+        self.__matrix = np.zeros((int(2 * radius + 1), int(2 * radius + 1)))
+        self.frame = 0
 
         ATOMS.append(self)
 
@@ -23,6 +24,7 @@ class Atom(object):
         self.__signals.append(signal)
 
     def update(self):
+        self.__matrix = np.zeros((int(2 * self.__radius + 1), int(2 * self.__radius + 1)))
         for i in range(int(2 * np.ceil(self.__radius)) + 1):
             for j in range(int(2 * np.ceil(self.__radius)) + 1):
                 for signal in self.__signals:
@@ -34,3 +36,6 @@ class Atom(object):
 
     def get_matrix(self):
         return self.__matrix
+
+    def sync(self, frame: int):
+        self.frame = frame
