@@ -35,7 +35,7 @@ if __name__ == '__main__':
     H1 = Host(np.array([0, 0, 0]))
     H2 = Host(np.array([0, 0, 1]))
 
-    A1 = Atom(H1, np.float64(20))
+    A1 = Atom(H1, np.float64(40))
     """
     S1 = Server(np.array([2, 1, 0]))
     S2 = Server(np.array([-4, 3, 0]))
@@ -53,31 +53,21 @@ if __name__ == '__main__':
     print(S1.get_message())
     """
 
-    Sig1 = Signal(np.array([3, 0, 0]), "RSgty", 10000, 10, direction=np.array([0, 1, 0]), concentrate=np.pi/2)
-    Sig2 = Signal(np.array([-3, 0, 0]), "RSgty", 10000, 10, direction=np.array([0, 1, 0]), concentrate=np.pi/2)
-    Sig3 = Signal(np.array([0, 0, 0]), "RSgty", 10000, 10)
-    Sig3.frame = 250
-
-    A1.receive_signal(Sig3)
-
-
-
-    tic = time.time()
-    A1.update()
-    tac = time.time()
-    print(tac - tic)
+    Sig1 = Signal(np.array([-40, -20, 0]), "RSgty", 100000, 1, direction=np.array([1, 0, 0]), concentrate=np.pi/2)
+    Sig2 = Signal(np.array([-40, 20, 0]), "RSgty", 100000, 1, direction=np.array([1, 0, 0]), concentrate=np.pi/2)
+    A1.receive_signal(Sig1)
 
     fig, ax = plt.subplots()
     imgs = []
     fig = plt.figure()
 
     for step in tqdm.tqdm(range(100)):
-        Sig3.frame = step*10
+        Sig1.frame = step
         A1.update()
         img = A1.get_matrix()
-        im = plt.imshow(img, animated=True, cmap="plasma", vmin=-10, vmax=10)
+        im = plt.imshow(img, animated=True, cmap="Spectral", vmin=-100, vmax=100)
         imgs.append([im])
 
-    ani = animation.ArtistAnimation(fig, imgs, interval=1, repeat_delay=0)
+    ani = animation.ArtistAnimation(fig, imgs, interval=0.2, repeat_delay=0)
     plt.show()
 

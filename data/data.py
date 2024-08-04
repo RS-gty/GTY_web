@@ -4,12 +4,11 @@ from utils.imports import *
 g = globals()
 
 # Time
-UPS = update_per_second = 1000
+UPS = update_per_second = 100
 FPU = frame_per_update = 1
 
 # Constants
-C = np.float64('1')
-Lambda = np.float64('0.25')
+C = np.float64('10')
 
 # Global Variables
 ATOMS = []

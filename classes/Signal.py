@@ -40,9 +40,9 @@ class Signal(object):
         return np.linalg.norm(self.__center - target)
 
     def density(self, distance):
-        bias = 2*np.pi*((C * (((self.frame - self.__origin_frame) / FPU) / UPS)) / Lambda)
+        bias = 2*np.pi*(self.__frequency * (((self.frame - self.__origin_frame) / FPU) / UPS))
         amp = self.__strength / (2 * np.pi * (1 - np.cos(self.__concentrate)) * distance ** 2)
-        n = np.sin(2 * np.pi * distance / Lambda + bias)
+        n = np.sin(2 * np.pi * distance / (C / self.__frequency) + bias)
         return n * amp
 
     def is_accessible(self, target: np.ndarray) -> bool:
@@ -50,7 +50,8 @@ class Signal(object):
         if self.__dir is None:
             return True
         else:
-            if np.arccos(np.dot(target_vector, self.__dir)/(np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate:
+            if np.arccos(np.dot(target_vector, self.__dir)/(np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate\
+                    and np.linalg.norm(target_vector) <= C * (((self.frame - self.__origin_frame) / FPU) / UPS):
                 return True
             else:
                 return False
