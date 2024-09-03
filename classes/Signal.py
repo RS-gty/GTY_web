@@ -22,6 +22,8 @@ class Signal(object):
             else:
                 raise ValueError("'value:concentrate' must be set after the direction is defined")
 
+        self._origin_frame = G_FRAME
+
     def sync(self, frame: int):
         self.frame = frame
 
@@ -47,11 +49,13 @@ class Signal(object):
 
     def is_accessible(self, target: np.ndarray) -> bool:
         target_vector = target - self.__center
-        if self.__dir is None:
-            return True
+        if np.linalg.norm(target_vector) >= C * (((self.frame - self.__origin_frame) / FPU) / UPS):
+            return False
         else:
-            if np.arccos(np.dot(target_vector, self.__dir)/(np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate\
-                    and np.linalg.norm(target_vector) <= C * (((self.frame - self.__origin_frame) / FPU) / UPS):
+            if self.__dir is None:
                 return True
             else:
-                return False
+                if np.arccos(np.dot(target_vector, self.__dir)/(np.linalg.norm(target_vector) * np.linalg.norm(self.__dir))) <= self.__concentrate:
+                    return True
+                else:
+                    return False

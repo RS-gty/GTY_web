@@ -19,9 +19,9 @@ class Server(object):
             if atom.check(self.__position):
                 self.atoms.append(atom)
 
-    def register(self, host: Host):
+    def register(self, host: Host, server_id: str):
         self.hosts.append(host)
-        self.__ids.append(host.register(self)[0])
+        self.__ids.append(server_id)
 
     def send_message(self, message, hosts=None, target=None, time: np.float16 = 0):
         if hosts is None:
@@ -60,6 +60,9 @@ class Server(object):
 
     def update(self):
         pass
+
+    def get_position(self):
+        return self.__position
 
     def sync(self, frame: int):
         self.frame = frame

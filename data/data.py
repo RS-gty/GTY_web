@@ -11,4 +11,5 @@ FPU = frame_per_update = 1
 C = np.float64('10')
 
 # Global Variables
+G_FRAME = 0
 ATOMS = []

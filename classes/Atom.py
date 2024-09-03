@@ -1,16 +1,20 @@
 from utils.data_imports import *
 
-from classes.Host import Host
+
 from classes.Signal import *
 
 
 class Atom(object):
-    def __init__(self, host: Host, radius: np.float64):
+    def __init__(self, host, radius: np.float64):
         self.__center = host.get_position()
         self.__radius = radius
         self.__signals = []
         self.__matrix = np.zeros((int(2 * radius + 1), int(2 * radius + 1)))
+        self.__host = host
         self.frame = 0
+        self.server_positions: list[list[str, np.ndarray]] = []
+
+        host.atom = self
 
         ATOMS.append(self)
 
@@ -24,18 +28,21 @@ class Atom(object):
         self.__signals.append(signal)
 
     def update(self):
-        self.__matrix = np.zeros((int(2 * self.__radius + 1), int(2 * self.__radius + 1)))
-        for i in range(int(2 * np.ceil(self.__radius)) + 1):
-            for j in range(int(2 * np.ceil(self.__radius)) + 1):
-                for signal in self.__signals:
-                    if signal.is_accessible(np.array([i - np.ceil(self.__radius), j - np.ceil(self.__radius), 0])):
-                        try:
-                            self.__matrix[i, j] += signal.density(signal.get_distance(np.array([i - np.ceil(self.__radius), j - np.ceil(self.__radius), 0])))
-                        except ValueError:
-                            pass
+        for i in self.server_positions:
+            density = 0
+            for signal in self.__signals:
+                if signal.is_accessible(i[1]):
+                    try:
+                        density += signal.density(signal.get_distance(i[1]))
+                    except ValueError:
+                        pass
+            print(density)
 
     def get_matrix(self):
         return self.__matrix
+
+    def get_radius(self):
+        return self.__radius
 
     def sync(self, frame: int):
         self.frame = frame

@@ -1,6 +1,7 @@
 from utils.data_imports import *
 
 from classes.Signal import *
+from classes.Atom import *
 
 
 class Host(object):
@@ -8,7 +9,7 @@ class Host(object):
         self._position = pos
         self.__message = []
         self.id = ''.join(random.sample(string.ascii_letters, 4))
-        self.atoms = []
+        self.atom: Atom or None = None
         self.servers = []
         self.server_id = []
         self.public_key, self.__private_key = rsa.newkeys(1024)
@@ -20,11 +21,14 @@ class Host(object):
             return s
 
     def register(self, server):
-        if True:
+        if np.linalg.norm(server.get_position() - self._position) <= self.atom.get_radius() and server not in self.servers:
             server_id = self.id_generator()
             self.servers.append(server)
             self.server_id.append(server_id)
-            return [server_id, True]
+            self.atom.server_positions.append([server_id, server.get_position()])
+            server.register(self, server_id)
+        else:
+            pass
 
     def get_position(self):
         return self._position
