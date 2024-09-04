@@ -20,15 +20,16 @@ class Host(object):
         while s not in self.server_id:
             return s
 
-    def register(self, server):
-        if np.linalg.norm(server.get_position() - self._position) <= self.atom.get_radius() and server not in self.servers:
-            server_id = self.id_generator()
-            self.servers.append(server)
-            self.server_id.append(server_id)
-            self.atom.server_positions.append([server_id, server.get_position()])
-            server.register(self, server_id)
-        else:
-            pass
+    def register(self, *servers):
+        for server in servers:
+            if np.linalg.norm(server.get_position() - self._position) <= self.atom.get_radius() and server not in self.servers:
+                server_id = self.id_generator()
+                self.servers.append(server)
+                self.server_id.append(server_id)
+                self.atom.server_positions.append([server_id, server.get_position()])
+                server.register(self, server_id)
+            else:
+                pass
 
     def get_position(self):
         return self._position

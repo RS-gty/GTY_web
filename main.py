@@ -34,13 +34,15 @@ def main():
 if __name__ == '__main__':
     H1 = Host(np.array([0, 0, 0]))
 
-    A1 = Atom(H1, np.float64(40))
+    A1 = Atom(H1, np.float64(2))
 
-    Sig1 = Signal(np.array([0, 0, 0]), "RSgty", 100000, 0.70)
-    Sig2 = Signal(np.array([0, 0, 0]), "RSgty", 100000, 0.70, direction=np.array([1, 0, 0]), concentrate=np.pi/2)
+    Sig1 = Signal(np.array([0, 0, 0]), "RSgty", 1000, 0.70)
+    Sig2 = Signal(np.array([0, 1, 0]), "RSgty", 2000, 0.47)
     A1.receive_signal(Sig1)
+    A1.receive_signal(Sig2)
 
-    Ser1 = Server(np.array([0, 10, 0]))
+    Ser1 = Server(np.array([1, -1, 0]))
+    Ser2 = Server(np.array([1, 1, 0]))
     """
     fig, ax = plt.subplots()
     imgs = []
@@ -59,11 +61,17 @@ if __name__ == '__main__':
     plt.show()
     print(1)
     """
-    Sig1.frame = 101
     H1.register(Ser1)
+    Y = []
 
-    print(H1.atom)
-    print(H1.server_id)
-    A1.update()
-    print(Ser1.get_id())
+    for frames in tqdm.tqdm(range(10000)):
+        Sig1.frame = frames
+        Sig2.frame = frames
+        Y.append(A1.get_info(Ser1.get_id(H1)))
+        A1.update()
 
+    X = np.fft.fft(Y)
+    A = (X.real ** 2 + X.imag ** 2) ** 0.5 * 2 / 10000
+    k = np.fft.fftfreq(10000, 1)
+    plt.plot(k, A)
+    plt.show()

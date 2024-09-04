@@ -36,10 +36,17 @@ class Atom(object):
                         density += signal.density(signal.get_distance(i[1]))
                     except ValueError:
                         pass
-            print(density)
+            self.__matrix[int(i[1][0] + self.__radius), int(i[1][1] + self.__radius)] = density
 
-    def get_matrix(self):
-        return self.__matrix
+
+    def get_matrix(self, server_id: str):
+        if server_id in self.__host.server_id:
+            return self.__matrix
+
+    def get_info(self, server_id: str):
+        for position in self.server_positions:
+            if position[0] == server_id:
+                return self.__matrix[int(position[1][0] + self.__radius), int(position[1][1] + self.__radius)]
 
     def get_radius(self):
         return self.__radius
