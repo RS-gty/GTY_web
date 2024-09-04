@@ -7,3 +7,5 @@ import matplotlib.pyplot as plt
 import tqdm
 
 from matplotlib import animation
+
+import utils.functions

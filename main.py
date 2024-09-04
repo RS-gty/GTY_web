@@ -1,3 +1,4 @@
+import utils.functions
 from utils.imports import *
 from utils.class_imports import *
 
@@ -36,10 +37,14 @@ if __name__ == '__main__':
 
     A1 = Atom(H1, np.float64(2))
 
-    Sig1 = Signal(np.array([0, 0, 0]), "RSgty", 1000, 0.70)
-    Sig2 = Signal(np.array([0, 1, 0]), "RSgty", 2000, 0.47)
+    Sig1 = Signal(np.array([0, 0, 0]), "RSgty", 100, 100)
+    Sig2 = Signal(np.array([0, 1, 0]), "RSgty", 100, 120)
+    Sig3 = Signal(np.array([-1, -1, 0]), "RSgty", 100, 140)
+    Sig4 = Signal(np.array([0, 1, 0]), "RSgty", 100, 160)
     A1.receive_signal(Sig1)
     A1.receive_signal(Sig2)
+    A1.receive_signal(Sig3)
+    A1.receive_signal(Sig4)
 
     Ser1 = Server(np.array([1, -1, 0]))
     Ser2 = Server(np.array([1, 1, 0]))
@@ -64,14 +69,22 @@ if __name__ == '__main__':
     H1.register(Ser1)
     Y = []
 
-    for frames in tqdm.tqdm(range(10000)):
+    t_frame = 400
+
+    for frames in tqdm.tqdm(range(t_frame)):
         Sig1.frame = frames
         Sig2.frame = frames
+        Sig3.frame = frames
+        Sig4.frame = frames
         Y.append(A1.get_info(Ser1.get_id(H1)))
         A1.update()
 
     X = np.fft.fft(Y)
-    A = (X.real ** 2 + X.imag ** 2) ** 0.5 * 2 / 10000
-    k = np.fft.fftfreq(10000, 1)
+    A = (X.real ** 2 + X.imag ** 2) ** 0.5 * 2 / t_frame
+    k = np.fft.fftfreq(t_frame, 0.001)
+    a = list(A)
+    for j in utils.functions.peak(A, 0.5):
+        print(k[a.index(j)])
+
     plt.plot(k, A)
     plt.show()

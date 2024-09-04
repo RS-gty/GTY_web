@@ -4,7 +4,7 @@ from utils.imports import *
 g = globals()
 
 # Time
-UPS = update_per_second = 100
+UPS = update_per_second = 1000
 FPU = frame_per_update = 1
 
 # Constants
